@@ -1,0 +1,92 @@
+# BezzierCompliled
+*.bzc
+*.protected.cps
+**/.mypy_cache
+**/not_git/**
+**/sample/**
+**/software/**
+**/tmp/**
+**/packages/**
+*.7z
+*.tar
+*.pyc
+*.pyd
+__pycache__
+*.log
+*bad_holes.xml
+*simplified.xml
+
+[Bb]uild/
+[Dd]ist/
+# Temporary installation
+**/bin/Debug/
+**/bin/Release/
+**/bin/kernel/
+**/bin/ribbon/
+**/bin/macro/
+**/bin/Confused/
+**/bin/*.exe
+
+# NuGet junk
+*.lock.json
+*.nuget.props
+*.nuget.targets
+
+
+#OS junk files
+[Tt]humbs.db
+*.DS_Store
+
+#Visual Studio files
+**/.vscode/*
+.vs
+*.[Oo]bj
+*.user
+*.aps
+*.pch
+*.vspscc
+*.vssscc
+*_i.c
+*_p.c
+*.ncb
+*.suo
+*.tlb
+*.tlh
+*.bak
+*.[Cc]ache
+*.ilk
+*.log$
+*.lib
+*.sbr
+*.sdf
+*.opensdf
+ipch/
+obj/
+[Dd]ebug*/
+[Rr]elease*/
+Ankh.NoLoad
+
+#Tooling
+_ReSharper*/
+*.resharper
+[Tt]est[Rr]esult*
+
+#Project files
+
+#Subversion files
+.svn
+
+# Office Temp Files
+~$*
+
+# Vim backup files
+*~
+# tmp
+[Tt][Mm][Pp]/
+
+documentation/*
+installers/*
+samples/*
+
+
+
