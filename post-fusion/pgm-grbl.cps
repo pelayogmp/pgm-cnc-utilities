@@ -488,7 +488,7 @@ function onSection() {
   }
   var workOffset = currentSection.workOffset;
   if (properties.forceG54 && workOffset == 0) {
-    warningOnce(localize("Work offset has not been specified. Using G54 as WCS."), WARNING_WORK_OFFSET);
+    //warningOnce(localize("Work offset has not been specified. Using G54 as WCS."), WARNING_WORK_OFFSET);
     workOffset = 1;
   }
   if (workOffset > 0) {
