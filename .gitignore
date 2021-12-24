@@ -9,6 +9,7 @@
 **/packages/**
 *.7z
 *.tar
+**/.venv/**
 *.pyc
 *.pyd
 __pycache__
