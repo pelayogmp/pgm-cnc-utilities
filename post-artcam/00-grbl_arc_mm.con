@@ -41,6 +41,7 @@ START = "(Tool [T]: [TOOLDESC])"
 START = "G54G90G0[XH][YH]"
 START = "M3[S]"
 START = "G0[ZH]"
+START = "(HEADER END)
 ;
 ; Program moves
 ;
