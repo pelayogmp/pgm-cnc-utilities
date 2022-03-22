@@ -9,6 +9,8 @@ python = ">=3.8,<3.11"
 pygcode = "^0.2.1"
 numpy = "^1.21.5"
 primify = "^2.0.0"
+mayavi = "^4.7.4"
+PySide2 = "^5.15.2"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"
