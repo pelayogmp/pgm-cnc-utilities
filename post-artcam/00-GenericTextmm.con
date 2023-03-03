@@ -1,0 +1,354 @@
+;
+; Generic text output of tool moves etc
+;
+; History
+;
+; Who When     What
+; === ======== ========================================
+; BEM 12/04/01 Written 
+; BEM 08/06/01 Added Circular arc support
+; BEM 09/05/01 Added support for displaying user variables
+; BEM 02/03/04 Added support for ROTARY_A_INDEX
+; BEM 19/03/04 Support for Uppercase versions of variables
+; BEM 06/07/04 Add tape splitting command example
+; BMD 29/11/06 Added Drill Bank and Cutter Comp variables
+; PAH 14/10/09 Added DRILLPATTERN_START, DREF
+; PAH 30/11/09 Added FIRST_TOOLCHANGE
+; PAH 18/03/11 Added TOOL_DB_DESC
+; PAH 18/05/11 Added ALLOW_HELICAL_ARCS
+; PAH 19/01/11 Added DREF_X, DREF_Y
+; PAH 28/05/12 Added PARENT_TOOLPATHNAME
+;
+DESCRIPTION = "00 PGM Generic Text Output - MM (*.txt)"
+;
+FILE_EXTENSION = "txt"
+;
+; All output units in mm
+;
+UNITS = MM
+;
+; Cariage return - line feed at end of each line
+;
+END_OF_LINE = "[13][10]"
+;
+; Set Rapid Rate For Machine
+;
+RAPID_FEED_RATE = 98765
+;
+; Set up default formating for variables
+;
+; Spindle Speed
+FORMAT = [S|@||1.0]
+; Feed Rate
+FORMAT = [F|@||1.0]
+; Tool moves in x,y and z
+FORMAT = [X|@||1.5]
+FORMAT = [Y|@||1.5]
+FORMAT = [Z|@||1.5]
+; Home tool positions 
+FORMAT = [XH|@||1.5]
+FORMAT = [YH|@||1.5]
+FORMAT = [ZH|@||1.5]
+FORMAT = [AH|@||1.5]
+
+; Tool Number
+FORMAT = [T|@||1.0]
+;
+; Drill Bank Variables
+; D is Drill Number, DB is Drill Number Binary Sum
+; DBX is Drill Number Binary Sum X axis, DBY is Drill Number Binary Sum Y axis
+; DREF is reference drill (first in drill list)
+; 
+FORMAT = [D|#||1.0]
+FORMAT = [DB|#||1.0]
+FORMAT = [DBX|@||1.0]
+FORMAT = [DBY|@||1.0]
+FORMAT = [DREF|@||1.0]
+;
+; Optional statement to limit tape file segments to specified number of lines
+;
+MAX_SEGMENT_LINES = 1000000
+;
+;
+;
+
+MIN_ARC_LENGTH = 0.01
+
+;
+;  Syntax for defining XYZ offsets for particular tool numbers
+; 
+; TOOL_XYZ_OFFSET = "START_TOOL_NUMBER END_TOOL_NUMBER X_OFFSET Y_OFFSET Z_OFFSET"
+;
+; e.g. TOOL_XYZ_OFFSET = "1 10 50 50 50"
+; Adds an offset of (50,50,50) to tool numbers 1 to 10
+; Offsets are added to every move
+;
+; The following command forces the user to specify an offset for every tool number
+;
+; TOOL_OFFSET_ALWAYS = YES
+;
+;TOOL_XYZ_OFFSET = "1 2 0.0 0.0 0.0"
+;TOOL_XYZ_OFFSET = "3 4 100.0 200.0 100.0"
+;TOOL_OFFSET_ALWAYS = YES
+;
+; Display standard variables
+;
+START = " "
+START = "START"
+START = "ASCII Text Information For Toolpaths "
+START = " "
+START = "NOTE: ALL sizes, positions etc. are in mm "
+START = " "
+START = "Relief Model:"
+START = "   X Min:[XMIN]  Y Min:[YMIN]   Z Min:[ZMIN]"
+START = "   X Max:[XMAX]  Y Max:[YMAX]   Z Max:[ZMAX]"
+START = "   X Size:[XSIZE]  Y Size:[YSIZE]  Z Size:[ZSIZE]"
+START = " "
+START = "Relief Material Block:"
+START = "   Thickness:[ZMATERIAL]"
+START = "   Z Top    :[ZMATERIAL_TOP]"
+START = "   Z Bottom :[ZMATERIAL_BOTTOM]"
+START = " "
+START = "Home Position:"
+START = "   X:[XH] Y:[YH] z:[ZH]"
+START = "   Safe Z: [SZ]"
+START = " "
+START = "Rotary A Index:"
+START = "   AH:[AH]"
+START = " "
+START = "Default Feed Rates (in mm/minute) "
+START = "   Cutting Feed Rate:[FC]"
+START = "   Plunge Feed Rate :[FP]"
+START = "   Rapid Feed Rate  :[FR]"
+START = "   Spindle Speed    :[S] r.p.m "
+START = " "
+START = "First Tool Information "
+START = "   Tool Number:[T]"
+START = "   ArtCAM Description:[TOOLDESC]"
+START = "   ArtCAM Description (uppercase):[TOOLDESCU]"
+START = "   User Description in Tool Database:[TOOL_DB_DESC]"
+START = "   User Description in Tool Database (uppercase):[TOOL_DB_DESCU]"
+START = " "
+START = "Miscelaneous Information "
+START = " "
+START = "   ToolpathName                    :[TOOLPATHNAME]"
+START = "   ToolpathName (uppercase)        :[TOOLPATHNAMEU]"
+START = "   Comment                         :[COMMENT]"
+START = "   Comment (uppercase)             :[COMMENTU]"
+START = "   Parent ToolpathName             :[PARENT_TOOLPATHNAME]"
+START = "   Parent ToolpathName (uppercase) :[PARENT_TOOLPATHNAMEU]"
+START = "   PathName                        :[PATHNAME]"
+START = "   PathName (uppercase)            :[PATHNAMEU]"
+START = "   FileDirectory                   :[FILEDIRECTORY]"
+START = "   FileDirectory (uppercase)       :[FILEDIRECTORYU]"
+START = "   FileName                        :[FILENAME]"
+START = "   FileName (uppercase)            :[FILENAMEU]"
+START = "   FileExtension                   :[FILEEXTENSION]"
+START = "   FileExtension (uppercase)       :[FILEEXTENSIONU]"
+START = " "
+START = "User Variables "
+START = " "
+START = "   1 - :[USER1]"
+START = "   2 - :[USER2]"
+START = "   3 - :[USER3]"
+START = "   4 - :[USER4]"
+START = "   5 - :[USER5]"
+START = "   6 - :[USER6]"
+START = "   7 - :[USER7]"
+START = "   8 - :[USER8]"
+START = "   9 - :[USER9]"
+START = " "
+START = "User Variables (uppercase)"
+START = " "
+START = "   1 - :[USER1U]"
+START = "   2 - :[USER2U]"
+START = "   3 - :[USER3U]"
+START = "   4 - :[USER4U]"
+START = "   5 - :[USER5U]"
+START = "   6 - :[USER6U]"
+START = "   7 - :[USER7U]"
+START = "   8 - :[USER8U]"
+START = "   9 - :[USER9U]"
+START = " "
+START = " "
+START = " -------- Start Of Toolmove Output ------------"
+START = " "
+;
+; Program moves
+;
+FEED_RATE_CHANGE       = "Feed Rate Change - [F]"
+FIRST_RAPID_RATE_MOVE  = "Rapid (1st)   [X] [Y] [Z] FeedRate:[F]"
+RAPID_RATE_MOVE        = "Rapid         [X] [Y] [Z] FeedRate:[F]"
+;
+FIRST_FEED_RATE_MOVE   = "Feed (1st)    [X] [Y] [Z]"
+FEED_RATE_MOVE         = "Feed          [X] [Y] [Z]"
+;
+FIRST_PLUNGE_RATE_MOVE = "Plunge (1st)  [X] [Y] [Z] FeedRate:[F]"
+PLUNGE_RATE_MOVE       = "Plunge        [X] [Y] [Z] FeedRate:[F]"
+RETRACT_MOVE           = "Retract       [X] [Y] [Z]"
+;
+FIRST_CW_ARC_MOVE      = "CW Arc (1st)  Start:[ArcStartX],[ArcStartY] Mid:[ArcMidX],[ArcMidY] End:[X],[Y],[Z] Centre:[IA],[JA] Centre Inc:[I],[J] Radius:[Radius]"
+CW_ARC_MOVE            = "CW Arc        Start:[ArcStartX],[ArcStartY] Mid:[ArcMidX],[ArcMidY] End:[X],[Y],[Z] Centre:[IA],[JA] Centre Inc:[I],[J] Radius:[Radius]"
+;
+FIRST_CCW_ARC_MOVE     = "CCW Arc (1st) Start:[ArcStartX],[ArcStartY] Mid:[ArcMidX],[ArcMidY] End:[X],[Y],[Z] Centre:[IA],[JA] Centre Inc:[I],[J] Radius:[Radius]"
+CCW_ARC_MOVE           = "CCW Arc       Start:[ArcStartX],[ArcStartY] Mid:[ArcMidX],[ArcMidY] End:[X],[Y],[Z] Centre:[IA],[JA] Centre Inc:[I],[J] Radius:[Radius]"
+;
+;
+; Drill Motor Commands
+; Start drill bank motor
+DRILLBANK_ON = " "
+DRILLBANK_ON = "Drill Bank ON"
+DRILLBANK_ON = " "
+;
+; Stop drill bank motor
+DRILLBANK_OFF = " "
+DRILLBANK_OFF = "Drill Bank OFF"
+DRILLBANK_OFF = " "
+; Drill Bank Off is only called out if there are toolpaths to follow the drilling
+;
+;
+; Drill Pattern Start
+DRILLPATTERN_START = " "
+DRILLPATTERN_START = "Drill Pattern Start"
+DRILLPATTERN_START = "  Reference Drill [DREF]"
+;The move XY is aligned with the Master drill
+;But there is a reference drill that is the first drill fired
+;Some controllers use it for the move position
+DRILLPATTERN_START = "  Reference Drill X position is [DREF_X]"
+DRILLPATTERN_START = "  Reference Drill Y position is [DREF_Y]"
+DRILLPATTERN_START = "  Reference Drill diameter is [DREF_D]"
+DRILLPATTERN_START = " "
+DRILLPATTERN_START = "  Hole start depth (relative to material top) [HOLE_START_DEPTH]"
+DRILLPATTERN_START = "  Hole finish depth (relative to material top) [HOLE_FINISH_DEPTH]"
+DRILLPATTERN_START = "  Drill cycle depth (absolute Z at bottom of hole) [DCD]"
+DRILLPATTERN_START = " "
+;
+; Drill Pattern Change
+;
+; [D] is drill number
+DRILL_LIST = " "
+DRILL_LIST = "Drill List of Each Drill Fired [D]"
+DRILL_LIST = " "
+;
+; [DB] is the drill number binary sum
+DRILLCHANGE =" "
+DRILLCHANGE ="Binary Sum of all Drills Fired [DB]"
+DRILLCHANGE =" "
+;
+; [DBX] calls the Binary Sum of all X drills being used
+; [DBY] calls the Binary Sum of all Y drills being used
+;DRILLCHANGE_X = " "
+;DRILLCHANGE_X = "Drill Bank X Axis ONLY [DBX]"
+;DRILLCHANGE_X = " "
+;DRILLCHANGE_Y = " "
+;DRILLCHANGE_Y = "Drill Bank Y Axis ONLY [DBY]"
+;DRILLCHANGE_Y = " "
+; 
+; Cutter Compensation Support
+CCOMP_LEFT = "G1 [CCL] X[X] Y[Y] F[F]"
+CCOMP_RIGHT = "G1 [CCR] [X] [Y] F[F]"
+CCOMP_OFF = "[CCO] X[X] Y[Y]"
+;
+; PRE/POST new Segment. Output before/after a new segment in the output file.
+; 
+NEW_SEGMENT_PRE_TOOLCHANGE = " "
+NEW_SEGMENT_PRE_TOOLCHANGE = "New segment before a toolchange: [COMMENT]"
+
+NEW_SEGMENT_POST_TOOLCHANGE = " "
+NEW_SEGMENT_POST_TOOLCHANGE = "New segment after a toolchange: [COMMENT]"
+NEW_SEGMENT_POST_TOOLCHANGE = " "
+;The above are always output just before and just after a toolchange at the start"
+;of a new segment, even if the toolchange is not output."
+;They could be used to set a new spindle speed for the same tool, which"
+;would not trigger a toolchange."
+;
+; First Toolchange
+;
+FIRST_TOOLCHANGE = " "
+FIRST_TOOLCHANGE = "######## First ToolChange ########"
+FIRST_TOOLCHANGE = " "
+FIRST_TOOLCHANGE = "First Tool Number:[T]"
+FIRST_TOOLCHANGE = "   ArtCAM Description:[TOOLDESC]"
+FIRST_TOOLCHANGE = "   ArtCAM Description (uppercase):[TOOLDESCU]"
+FIRST_TOOLCHANGE = "   User Description in Tool Database:[TOOL_DB_DESC]"
+FIRST_TOOLCHANGE = "   User Description in Tool Database (uppercase):[TOOL_DB_DESCU]"
+FIRST_TOOLCHANGE = " "
+FIRST_TOOLCHANGE = "##### End Of First ToolChange #####"
+FIRST_TOOLCHANGE = " "
+;
+; Toolchange moves (only output for 2nd and later tools )
+;
+TOOLCHANGE = " "
+TOOLCHANGE = "######## ToolChange ########"
+TOOLCHANGE = " "
+TOOLCHANGE = "Tool Number:[T]"
+TOOLCHANGE = "   ArtCAM Description:[TOOLDESC]"
+TOOLCHANGE = "   ArtCAM Description (uppercase):[TOOLDESCU]"
+TOOLCHANGE = "   User Description in Tool Database:[TOOL_DB_DESC]"
+TOOLCHANGE = "   User Description in Tool Database (uppercase):[TOOL_DB_DESCU]"
+TOOLCHANGE = " "
+TOOLCHANGE = "   Home Position:"
+TOOLCHANGE = "     X:[XH] Y:[YH] Z:[ZH]"
+TOOLCHANGE = "     Safe Z: [SZ]"
+TOOLCHANGE = " "
+TOOLCHANGE = "   Default Feed Rates (in mm/second) "
+TOOLCHANGE = "     Cutting Feed Rate:[FC]"
+TOOLCHANGE = "     Plunge Feed Rate :[FP]"
+TOOLCHANGE = "     Rapid Feed Rate  :[FR]"
+TOOLCHANGE = "     Spindle Speed    :[S] r.p.m "
+TOOLCHANGE = " "
+TOOLCHANGE = "   Previous Tool Number:[TP]"
+TOOLCHANGE = " "
+TOOLCHANGE = "Miscelaneous Information "
+TOOLCHANGE = " "
+TOOLCHANGE = "   ToolpathName             :[TOOLPATHNAME]"
+TOOLCHANGE = "   ToolpathName (uppercase) :[TOOLPATHNAMEU]"
+TOOLCHANGE = "   Comment                  :[COMMENT]"
+TOOLCHANGE = "   Comment (uppercase)      :[COMMENTU]"
+TOOLCHANGE = "   PathName                 :[PATHNAME]"
+TOOLCHANGE = "   PathName (uppercase)     :[PATHNAMEU]"
+TOOLCHANGE = "   FileName                 :[FILENAME]"
+TOOLCHANGE = "   FileName (uppercase)     :[FILENAMEU]"
+TOOLCHANGE = " "
+TOOLCHANGE = "User Variables "
+TOOLCHANGE = " "
+TOOLCHANGE = "   1 - :[USER1]"
+TOOLCHANGE = "   2 - :[USER2]"
+TOOLCHANGE = "   3 - :[USER3]"
+TOOLCHANGE = "   4 - :[USER4]"
+TOOLCHANGE = "   5 - :[USER5]"
+TOOLCHANGE = "   6 - :[USER6]"
+TOOLCHANGE = "   7 - :[USER7]"
+TOOLCHANGE = "   8 - :[USER8]"
+TOOLCHANGE = "   9 - :[USER9]"
+TOOLCHANGE = " "
+TOOLCHANGE = "##### End Of ToolChange #####"
+TOOLCHANGE = " "
+;
+; Commands output when a rotary index takes place
+;
+ROTARY_A_INDEX = " "
+ROTARY_A_INDEX = " "
+ROTARY_A_INDEX = " Rotary A Axis Index Move - Angle AH:[AH]"
+ROTARY_A_INDEX = " "
+ROTARY_A_INDEX = " "
+
+
+;
+; Allow helical arcs (for profile ramping)
+;
+ALLOW_HELICAL_ARCS = YES
+;
+;
+
+;
+; Commands to output at end of file
+;
+END = " "
+END = " ###### End Of File ###### "
+END = " "
+END = " Final Tool Position: [X] [Y] [Z]"
+END = " "
+END = " Home Position: [XH] [YH] [ZH]"
+END = " "
+;
