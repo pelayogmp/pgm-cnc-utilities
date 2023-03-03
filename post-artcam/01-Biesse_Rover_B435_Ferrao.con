@@ -1,0 +1,240 @@
+;
+; G - Code configuration file - with Arc Support
+;
+; History
+;
+; Who When     What
+; === ======== ========================================
+; TM  13/05/99 Written
+; BEM 20/05/99 Removed line numbers
+; BEM 21/03/00 Added DESCRIPTION and FILE_EXTENSION fields
+; BEM 19/06/01 Added support for circular arc output 
+;              move to home pos at end instead of 0,0,ZH
+; bem 07/09/01 Added G17 to define plane for circular arcs
+; tm  01/08/03 Configured for Biesse Rover 24 with TC
+; bem 23/03/04 Added all sections and AUX_DLL call to fix up the
+;              offsets to the sections 
+; bem 28/05/04 Added support for seting correct PRF= value in biesse aux dll
+;              we store SafeZ in PRF value and 'fix up' in aux dll 
+; TLS 23/04/07 Renamed for Biesse Rover B4.40
+;	       Adjusted TOOLDESC in program header to TOOLPATHNAME to fix callout issue bug
+; 	       **Users will need to adjust their tool numbers and descriptions in the tool database 
+; 		 so that the correct names and numbers are pulled from the post**
+; GJM 26/04/07  The Tool Descritpion MUST BE IDENTICAL to the name on the control.  The Spindle Speeds
+;               on the posted code & Tool Setup page on the control must NOT BE OVER the allowable machine
+;               speeds or you will get errors and the machine will not run.
+; TLS 17/08/07 Changed FILENAME to TOOLPATHNAME in TOOLCHANGE section 
+; pah 18/03/11 Use TOOL_DB_DESC as tool description...it is the user defined description in the tool database
+; PGM 20230303 Adapted to Ferrao's Biesse Rover B4.35             
+;
+
+; For full list of expansions and variables see: "ArtCAM 2018/postp/GenericText[mm|inch|rotary].con"
+DESCRIPTION = "01 Biesse Rover B4.35 Ferrao (mm) (*.anc)"
+;
+FILE_EXTENSION = "anc"
+;
+UNITS = MM
+;
+; PGM: line feed at end of each line
+;
+; END_OF_LINE = "[13][10]"
+END_OF_LINE = "[10]"
+;
+; PGM: Block numbering 
+;
+LINE_NUM_START     = 10
+LINE_NUM_INCREMENT = 10
+LINE_NUM_MAXIMUM   = 999999999
+;
+; Set up default formating for variables
+;
+; Line numbering
+FORMAT = [N|@|N|1.0|1]
+; Spindle Speed
+FORMAT = [S|@||1.0]
+; PGM: Feed Rate in mm/min
+FORMAT = [F|#|F|1.0|1]
+FORMAT = [FP|#||1.0|1]
+FORMAT = [FC|#||1.0|1]
+
+; Tool moves in x,y and z
+FORMAT = [X|#|X|1.3]
+; PGM: Y Z Inverted. machine 
+FORMAT = [Y|#|Y|1.3|-1]
+FORMAT = [Z|#|Z|1.3|-1]
+;
+;FORMAT = [ZI|#|Z|1.3|-1]
+;
+; Arc Centre Cordinates
+FORMAT = [IA|@|I|1.3]
+FORMAT = [JA|@|J|1.3]
+; PGM: No prefix for Home positions 
+FORMAT = [XH|@||1.3|1]
+FORMAT = [YH|@||1.3|-1]
+FORMAT = [ZH|@||1.3|-1]
+
+;
+; First	line is removed by aux dll - it is only used to calculate the correct
+; value for the PRF= section output at start and toolchanges
+;
+;
+; 91 = ASCII for [
+; 13 10 = ASCII for Carriage return
+; 93 = ASCII for ]
+; 34 = ASCII for "
+;	 
+START = "START"
+START = "[91]COMMENTO[93]"
+START = "[FILENAME]"
+; START = ""
+START = "[91]CENTRO01[93]"
+START = ""
+START = "PARAMETRI=000000000"
+START = "UTENSILI=000000000"
+START = "LABELF=000000000"
+START = "LABELC=000000000"
+START = "FORATURA=000000000"
+START = "CONTORNATURA=000000000"
+START = "TABELLEFORI=000000000"
+START = "CONFASSIST=000000000"
+START = "ATTREZZAGGIO=000000000"
+;
+; Setup Material parameters
+;
+START = "[91]PARAMETRI01[93]"
+; PGM: Adapt parameters for Ferrao's machine. Vaccum Clamps heigth (PCSG) must be taken into account. FIXME: Adjust PCSG
+START = "N10 G71 HC=1 LY=[YSIZE] PLPZ=[ZMATERIAL] PCSG=19 PDM=0 PUOS=0 FIL=0 BLO=0 RUO=0 PRS=1 PRL=1 PNI=1 LZ=(PLPZ+PCSG) PPWQ=0.00 PPWA=0 KA=0 PVER=1.000 LX=[XSIZE]"
+START = "%"
+;
+START = "[91]LABELF01[93]"
+START = "%"
+;
+START = "[91]LABELC01[93]"
+START = "%"
+;
+START = "[91]FORATURA01[93]"
+START = "%"
+;
+START = "[91]TABELLEFORI01[93]"
+START = "%"
+;
+START = "[91]CONFASSIST01[93]"
+START = "%"
+;
+START = "[91]ATTREZZAGGIO01[93]"
+START = "%"
+;
+; START = "[91]UTENSILI01[93]"
+; START = "%"
+;
+START = "[91]CONTORNATURA01[93]"
+;
+; PGM: ToHomeZ + Origin Ofsset + Axis selection
+START = "[N] G1 G300 Z=PRK "
+; PGM: Origin in Artcam must be BlockXmin,BlockYmax,BlockZmin or it must be offseted.
+; PGM: For example if origin in Artcam is Xmin,Ymin,Zmax (FIZME: Verify PLPY PLPZ assigned in N10 with LY, LZ see sec 2.2.2 pag 2-13)
+START = "[N] YO=LPY ZO=-LPZ "
+START = "[N] AX=X,Y,Z "
+;; START = "[N] ; START END "
+
+;
+; Program moves
+;
+; PGM: Use G1 G300 for rapid with interpolated F?
+RAPID_RATE_MOVE        = "[N] G1 G300 [X] [Y] [Z] "
+;
+FIRST_FEED_RATE_MOVE   = "[N] G1 [X] [Y] [Z] [F] "
+FEED_RATE_MOVE         = "[N] [X] [Y] [Z] "
+;
+
+; Cutter Compensation Support
+CCOMP_LEFT = "[N] G1 [CCL] [X] [Y] [F] "
+CCOMP_RIGHT = "[N] G1 [CCR] [X] [Y] [F] "
+CCOMP_OFF = "[N] [CCO] [X] [Y] "
+
+;
+; G4 CCW Radius + End point
+; G5 CW Radius + End point
+; G7 + G8 Elipse
+;
+
+FIRST_CW_ARC_MOVE      = "[N] G5 [X] [Y] R-[Radius] [F] "
+CW_ARC_MOVE            = "[N] G5 [X] [Y] R-[Radius] "
+;
+FIRST_CCW_ARC_MOVE     = "[N] G4 [X] [Y] R[Radius] [F] "
+CCW_ARC_MOVE           = "[N] G4 [X] [Y] R[Radius] "
+
+;; FIRST_TOOLCHANGE = "[N] ; FIRST_TOOLCHANGE START "
+; PCUA == Programa Cambio Utensilio Automatico ???  ver ejemplo en pag 2-82
+FIRST_TOOLCHANGE = "[N] PAN=1 ST1=[34][TOOL_DB_DESCU][34] ST2=[34]NULL[34] ST3=[34]NULL[34] ST4=[34]NULL[34] L=PCUA "
+; GTPON == aproximacion al primer punto con arranque de cabezal ??? PCUF= May be CUFL??? sec 2.8.6 pag 2-81
+FIRST_TOOLCHANGE = "[N] PAN=1 UT=0 QX=[XH] QY=[YH] QZ=[ZH] ANC=0.0 PVR=[S] PFLO=0 PTCP=0 PDEF=0 PCUF=1 L=GTPON "
+    ; PCUF= May be CUFL??? sec 2.8.6 pag 2-81
+; Llamada a GSETTING == FIXME: Configura los G por defecto ??? buscarlo en el ordenador
+FIRST_TOOLCHANGE = "[N] L=GSETTING "
+; Llamada a PTRZ == ???
+FIRST_TOOLCHANGE = "[N] L=PTRZ "
+; Approach to Home
+FIRST_TOOLCHANGE = "[N] G1 G300 X[XH] Y[YH] "
+FIRST_TOOLCHANGE = "[N] G1 G300 Z[ZH] "
+; G61  wait for all axis
+FIRST_TOOLCHANGE = "[N] G61 "
+FIRST_TOOLCHANGE = "[N] ; TRAYECTORIA: [COMMENTU] "
+;; FIRST_TOOLCHANGE = "[N] ; FIRST_TOOLCHANGE END "
+
+;; TOOLCHANGE = "[N] ; TOOLCHANGE START "
+; PGM: Walrus operator := ???
+TOOLCHANGE = "[N] Z:=Z "
+; Re-select axis why???
+TOOLCHANGE = "[N] AX=X,Y,Z "
+; Disable Tool Length Comp
+TOOLCHANGE = "[N] TRZ=0 "
+; To Park Z
+TOOLCHANGE = "[N] G1 G300 Z=PRK "
+; Unload Tool
+TOOLCHANGE = "[N] TP0 "
+TOOLCHANGE = "[N] ; [COMMENTU] "
+; PCUA == Programa Cambio Utensilio Automatico ???  ver ejemplo en pag 2-82
+TOOLCHANGE = "[N] PAN=1 ST1=[34][TOOL_DB_DESCU][34] ST2=[34]NULL[34] ST3=[34]NULL[34] ST4=[34]NULL[34] L=PCUA "
+; GTPON == aproximacion al primer punto con arranque de cabezal ??? PCUF= May be CUFL??? sec 2.8.6 pag 2-81
+TOOLCHANGE = "[N] PAN=1 UT=0 QX=[XH] QY=[YH] QZ=[ZH] ANC=0.0 PVR=[S] PFLO=0 PTCP=0 PDEF=0 PCUF=1 L=GTPON "
+; Llamada a GSETTING == FIXME: Configura los G por defecto ??? buscarlo en el ordenador
+TOOLCHANGE = "[N] L=GSETTING "
+; Llamada a PTRZ == ???
+TOOLCHANGE = "[N] L=PTRZ "
+; Approach to Home
+TOOLCHANGE = "[N] G1 G300 X[XH] Y[YH] "
+TOOLCHANGE = "[N] G1 G300 Z[ZH] "
+; G61  wait for all axis
+TOOLCHANGE = "[N] G61 "
+;; TOOLCHANGE = "[N] ; TOOLCHANGE END "
+
+NEW_SEGMENT_POST_TOOLCHANGE = "[N] ; TRAYECTORIA: [COMMENTU] "
+
+; End of file
+;; END = "[N] ; END START "
+; PGM: Walrus operator := ???
+END = "[N] Z:=Z "
+; Re-select axis why???
+END = "[N] AX=X,Y,Z "
+; Disable Tool Length Comp
+END = "[N] TRZ=0 "
+; To Park Z
+END = "[N] G1 G300 Z=PRK "
+; Unload Tool
+END = "[N] TP0 "
+END = "[N] L=POFF "
+END = "%"
+;
+; We will write out the tool names in the AUX DLL here
+;
+END = "[91]UTENSILI01[93]"
+;; END = "; END END"
+;
+; Aux DLL to run to fix up offsets for file sections ...
+;
+; Load an Auxiliary DLL to postprocess file after output ...
+;
+AUX_DLL = "aux_dlls\biesse.dll"
+; AUX_DLL_DATA = "DEBUG OUTPUT_TOOLS"
+AUX_DLL_DATA = "OUTPUT_TOOLS"
